@@ -29,68 +29,97 @@ O projeto consiste nos seguintes componentes principais:
   - `app.js`: Configura o Express, middlewares e rotas.
   - `index.js`: Inicializa o servidor HTTP.
 
-## Requisitos
+- **Docker**: Arquivos para containerização da aplicação.
+  - `Dockerfile`: Configuração para criar a imagem Docker da API.
+  - `docker-compose.yml`: Orquestra os containers da API e do banco de dados.
+  - `init.sql`: Script para inicializar a tabela de clientes no PostgreSQL.
+
+## Pré-requisitos
 
 - Node.js (v14 ou superior)
-- Docker e Docker Compose
 - PostgreSQL
+- npm ou yarn
+- Docker e Docker Compose (opcional, para execução containerizada)
 
 ## Configuração e Execução
 
-### Usando Docker Compose (Recomendado)
+### 1. Clonar o Repositório
 
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/seu-usuario/api-clientes.git
-   cd api-clientes
+```bash
+git clone https://github.com/seu-usuario/TF-Web.API.git
+cd TF-Web.API
+```
+
+### 2. Configurar o Banco de Dados (Execução Local)
+
+1. Crie um banco de dados no PostgreSQL:
+   ```sql
+   CREATE DATABASE clientes_api;
    ```
 
-2. **Configure as variáveis de ambiente**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   O arquivo `.env` já está configurado para funcionar com o Docker Compose.
-
-3. **Inicie os contêineres**
-   ```bash
-   docker-compose up -d
-   ```
-   
-   Este comando irá:
-   - Criar um contêiner PostgreSQL com o banco de dados
-   - Criar um contêiner para a API
-   - Configurar a rede entre os contêineres
-   - Expor a API na porta 3000
-
-4. **Acesse a API**
-   - A API estará disponível em: http://localhost:3000/api
-   - A documentação Swagger estará em: http://localhost:3000/api-docs
-
-### Executando Localmente (Sem Docker)
-
-1. **Clone o repositório e instale as dependências**
-   ```bash
-   git clone https://github.com/seu-usuario/api-clientes.git
-   cd api-clientes
-   npm install
+2. Execute o script DDL para criar a tabela de clientes:
+   ```sql
+   CREATE TABLE clientes (
+       codigo SERIAL PRIMARY KEY,
+       nome VARCHAR(255) NOT NULL,
+       data_nascimento DATE,
+       rg VARCHAR(20),
+       cpf VARCHAR(14) UNIQUE,
+       telefone VARCHAR(20),
+       endereco VARCHAR(255),
+       numero VARCHAR(10),
+       cidade VARCHAR(100),
+       uf CHAR(2),
+       cep VARCHAR(9)
+   );
    ```
 
-2. **Configure as variáveis de ambiente**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edite o arquivo `.env` para apontar para seu banco PostgreSQL local.
+### 3. Configurar o Arquivo .env (Execução Local)
 
-3. **Inicie a aplicação**
-   ```bash
-   npm run dev
-   ```
+```bash
+cp API-Clientes/.env.example API-Clientes/.env
+```
+
+Edite o arquivo `.env` com as configurações do seu banco de dados:
+```
+PORT=3000
+DB_NAME=clientes_api
+DB_USER=postgres
+DB_PASS=postgres
+DB_HOST=localhost
+```
+
+### 4. Iniciar a API
+
+#### Opção 1: Usando Node.js (Execução Local)
+
+```bash
+cd API-Clientes
+npm install
+npm start
+```
+
+Ou em modo de desenvolvimento:
+```bash
+npm run dev
+```
+
+#### Opção 2: Usando Docker Compose (Recomendado)
+
+```bash
+docker-compose up -d
+```
+
+Este comando irá:
+- Criar um contêiner PostgreSQL com o banco de dados
+- Criar automaticamente a tabela de clientes usando o script init.sql
+- Criar um contêiner para a API
+- Configurar a rede entre os contêineres
+- Expor a API na porta 3000
+
+Não é necessário configurar manualmente o banco de dados ou o arquivo .env quando usar Docker Compose, pois todas as configurações já estão definidas no arquivo docker-compose.yml.
 
 ## Endpoints da API
-
-### Clientes
 
 - `GET /api/clientes` - Listar todos os clientes
   - Parâmetros de consulta:
@@ -121,18 +150,81 @@ O projeto consiste nos seguintes componentes principais:
 }
 ```
 
-## Documentação da API
+## Testando a API
 
-A documentação completa da API está disponível através do Swagger UI. Após iniciar a aplicação, acesse:
+### Usando o Swagger UI
 
+A documentação completa da API está disponível através do Swagger UI:
 ```
 http://localhost:3000/api-docs
 ```
 
-## Testes
+### Usando Scripts de Teste
 
-Para executar os testes unitários:
+1. **Script Node.js**:
+   ```bash
+   npm install axios
+   node test-api.js
+   ```
 
-```bash
-npm test
-```
+2. **Script Batch (Windows)**:
+   ```bash
+   test-curl.bat
+   ```
+
+3. **Script Shell (Linux/Mac)**:
+   ```bash
+   chmod +x test-api.sh
+   ./test-api.sh
+   ```
+
+### Usando Postman ou Insomnia
+
+Importe o arquivo `postman_collection.json` para testar todos os endpoints.
+
+## Verificação de Requisitos
+
+Ao testar a API, verifique se todos os requisitos funcionais estão sendo atendidos:
+
+1. **Criação de Cliente**:
+   - Validação de campos obrigatórios
+   - Validação de CPF único
+   - Resposta com código 201 e dados do cliente
+
+2. **Leitura de Cliente por Código**:
+   - Resposta com código 200 e dados do cliente
+   - Resposta 404 quando cliente não encontrado
+
+3. **Listagem de Clientes**:
+   - Filtros funcionando (nome, cidade)
+   - Paginação funcionando
+
+4. **Atualização de Cliente**:
+   - Validação de campos
+   - Resposta com código 200 e dados atualizados
+   - Resposta 404 quando cliente não encontrado
+
+5. **Exclusão de Cliente**:
+   - Resposta com código 204 sem conteúdo
+   - Resposta 404 quando cliente não encontrado
+
+## Solução de Problemas
+
+1. **Erro de conexão com o banco de dados**:
+   - Verifique se o PostgreSQL está em execução
+   - Verifique as credenciais no arquivo `.env`
+   - Verifique se o banco de dados foi criado
+
+2. **Erro ao iniciar a aplicação**:
+   - Verifique se todas as dependências foram instaladas
+   - Verifique se o arquivo `.env` está configurado corretamente
+
+3. **Erro nas requisições**:
+   - Verifique se a API está em execução
+   - Verifique se a URL está correta
+   - Verifique o formato do JSON nas requisições POST e PUT
+
+4. **Problemas com Docker**:
+   - Verifique se o Docker e Docker Compose estão instalados e em execução
+   - Use `docker-compose logs` para verificar erros nos containers
+   - Certifique-se de que as portas 3000 e 5432 não estão sendo usadas por outros serviços
