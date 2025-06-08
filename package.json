@@ -2,11 +2,14 @@
   "name": "api-clientes",
   "version": "1.0.0",
   "description": "API RESTful para gerenciamento de clientes",
-  "main": "src/index.js",
+  "main": "API-Clientes/src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest"
+    "start": "cd API-Clientes && node src/index.js",
+    "dev": "cd API-Clientes && nodemon src/index.js",
+    "test": "node tests/run-all-tests.js",
+    "test:api": "node tests/test-api.js",
+    "test:filtros": "node tests/test-filtros.js",
+    "test:validacoes": "node tests/test-validacoes.js"
   },
   "dependencies": {
     "axios": "^1.9.0",

@@ -2,10 +2,10 @@ const axios = require('axios');
 
 const API_URL = 'http://localhost:3000/api';
 
-// Cliente de teste
+// Cliente de teste com CPF válido
 const novoCliente = {
   nome: "Cliente Teste",
-  cpf: "123.456.789-09",
+  cpf: "529.982.247-25", // CPF válido
   data_nascimento: "1990-01-01",
   rg: "1234567",
   telefone: "(11) 99999-9999",
@@ -19,7 +19,7 @@ const novoCliente = {
 // Cliente para atualização
 const clienteAtualizado = {
   nome: "Cliente Atualizado",
-  cpf: "123.456.789-09", // Adicionado CPF para passar na validação
+  cpf: "529.982.247-25", // Mesmo CPF para não causar conflito
   telefone: "(11) 88888-8888"
 };
 
@@ -134,6 +134,7 @@ async function executarTestes() {
     // Verificar se cliente foi excluído
     try {
       await testarBuscaClientePorCodigo(codigoCliente);
+      console.error('Erro: Cliente ainda existe após exclusão!');
     } catch (error) {
       console.log('Cliente excluído com sucesso, não foi encontrado na busca!');
     }

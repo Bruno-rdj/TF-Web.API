@@ -3,7 +3,7 @@ echo Testando API de Clientes
 
 echo.
 echo 1. Criando um novo cliente...
-curl -X POST http://localhost:3000/api/clientes -H "Content-Type: application/json" -d "{\"nome\":\"Cliente Teste\",\"cpf\":\"123.456.789-09\",\"data_nascimento\":\"1990-01-01\",\"rg\":\"1234567\",\"telefone\":\"(11) 99999-9999\",\"endereco\":\"Rua Exemplo\",\"numero\":\"123\",\"cidade\":\"São Paulo\",\"uf\":\"SP\",\"cep\":\"01234-567\"}"
+curl -X POST http://localhost:3000/api/clientes -H "Content-Type: application/json" -d "{\"nome\":\"Cliente Teste\",\"cpf\":\"529.982.247-25\",\"data_nascimento\":\"1990-01-01\",\"rg\":\"1234567\",\"telefone\":\"(11) 99999-9999\",\"endereco\":\"Rua Exemplo\",\"numero\":\"123\",\"cidade\":\"São Paulo\",\"uf\":\"SP\",\"cep\":\"01234-567\"}"
 
 echo.
 echo 2. Listando todos os clientes...
@@ -16,7 +16,7 @@ curl -X GET http://localhost:3000/api/clientes/%codigo%
 
 echo.
 echo 4. Atualizando cliente...
-curl -X PUT http://localhost:3000/api/clientes/%codigo% -H "Content-Type: application/json" -d "{\"nome\":\"Cliente Atualizado\",\"telefone\":\"(11) 88888-8888\"}"
+curl -X PUT http://localhost:3000/api/clientes/%codigo% -H "Content-Type: application/json" -d "{\"nome\":\"Cliente Atualizado\",\"cpf\":\"529.982.247-25\",\"telefone\":\"(11) 88888-8888\"}"
 
 echo.
 echo 5. Verificando cliente atualizado...

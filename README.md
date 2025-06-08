@@ -8,31 +8,35 @@ Este projeto implementa uma API para gerenciamento de clientes, permitindo cadas
 
 ## Estrutura do Projeto
 
-O projeto consiste nos seguintes componentes principais:
+O projeto está organizado da seguinte forma:
 
-- **Controllers**: Responsáveis por receber as requisições HTTP, interagir com os models e retornar as respostas adequadas.
-  - `clientesController.js`: Implementa as operações CRUD para clientes.
-
-- **Models**: Definem a estrutura dos dados e interagem com o banco de dados.
-  - `Cliente.js`: Define o modelo de dados para clientes com validações.
-
-- **Routes**: Definem os endpoints da API e conectam as requisições aos controllers.
-  - `clientes.js`: Define as rotas para operações com clientes.
-
-- **Middlewares**: Implementam funcionalidades que são executadas entre a requisição e a resposta.
-  - `validarCliente.js`: Valida os dados do cliente antes de processá-los.
-
-- **Config**: Contém configurações do projeto.
-  - `database.js`: Configuração de conexão com o banco de dados.
-
-- **App e Server**: Inicializam e configuram o servidor Express.
-  - `app.js`: Configura o Express, middlewares e rotas.
-  - `index.js`: Inicializa o servidor HTTP.
-
-- **Docker**: Arquivos para containerização da aplicação.
-  - `Dockerfile`: Configuração para criar a imagem Docker da API.
-  - `docker-compose.yml`: Orquestra os containers da API e do banco de dados.
-  - `init.sql`: Script para inicializar a tabela de clientes no PostgreSQL.
+```
+TF-Web.API/
+├── API-Clientes/           # Código principal da API
+│   ├── src/                # Código fonte
+│   │   ├── config/         # Configurações
+│   │   ├── controllers/    # Controladores
+│   │   ├── middlewares/    # Middlewares
+│   │   ├── models/         # Modelos
+│   │   ├── routes/         # Rotas
+│   │   ├── app.js          # Configuração do Express
+│   │   ├── index.js        # Ponto de entrada
+│   │   └── swagger.js      # Configuração do Swagger
+│   ├── .env.example        # Exemplo de variáveis de ambiente
+│   ├── Dockerfile          # Configuração do Docker
+│   └── package.json        # Dependências da API
+├── tests/                  # Scripts de teste
+│   ├── test-api.js         # Teste básico da API
+│   ├── test-filtros.js     # Teste de filtros
+│   ├── test-validacoes.js  # Teste de validações
+│   ├── test-curl.bat       # Teste via curl (Windows)
+│   ├── test-api.sh         # Teste via curl (Linux/Mac)
+│   └── run-all-tests.js    # Script para executar todos os testes
+├── docker-compose.yml      # Configuração do Docker Compose
+├── init.sql                # Script de inicialização do banco
+├── package.json            # Dependências do projeto
+└── README.md               # Documentação
+```
 
 ## Pré-requisitos
 
@@ -94,8 +98,10 @@ DB_HOST=localhost
 #### Opção 1: Usando Node.js (Execução Local)
 
 ```bash
-cd API-Clientes
+# Instalar dependências
 npm install
+
+# Iniciar a API
 npm start
 ```
 
@@ -132,6 +138,7 @@ Não é necessário configurar manualmente o banco de dados ou o arquivo .env qu
 - `POST /api/clientes` - Criar um novo cliente
 - `PUT /api/clientes/:codigo` - Atualizar um cliente
 - `DELETE /api/clientes/:codigo` - Excluir um cliente
+- `GET /health` - Verificar o status da API
 
 ### Exemplo de payload para criar/atualizar cliente
 
@@ -161,52 +168,31 @@ http://localhost:3000/api-docs
 
 ### Usando Scripts de Teste
 
-1. **Script Node.js**:
+1. **Scripts Node.js**:
    ```bash
-   npm install axios
-   node test-api.js
+   # Executar todos os testes
+   npm test
+   
+   # Executar teste específico
+   npm run test:api
+   npm run test:filtros
+   npm run test:validacoes
    ```
 
 2. **Script Batch (Windows)**:
    ```bash
-   test-curl.bat
+   tests\test-curl.bat
    ```
 
 3. **Script Shell (Linux/Mac)**:
    ```bash
-   chmod +x test-api.sh
-   ./test-api.sh
+   chmod +x tests/test-api.sh
+   ./tests/test-api.sh
    ```
 
 ### Usando Postman ou Insomnia
 
 Importe o arquivo `postman_collection.json` para testar todos os endpoints.
-
-## Verificação de Requisitos
-
-Ao testar a API, verifique se todos os requisitos funcionais estão sendo atendidos:
-
-1. **Criação de Cliente**:
-   - Validação de campos obrigatórios
-   - Validação de CPF único
-   - Resposta com código 201 e dados do cliente
-
-2. **Leitura de Cliente por Código**:
-   - Resposta com código 200 e dados do cliente
-   - Resposta 404 quando cliente não encontrado
-
-3. **Listagem de Clientes**:
-   - Filtros funcionando (nome, cidade)
-   - Paginação funcionando
-
-4. **Atualização de Cliente**:
-   - Validação de campos
-   - Resposta com código 200 e dados atualizados
-   - Resposta 404 quando cliente não encontrado
-
-5. **Exclusão de Cliente**:
-   - Resposta com código 204 sem conteúdo
-   - Resposta 404 quando cliente não encontrado
 
 ## Solução de Problemas
 
